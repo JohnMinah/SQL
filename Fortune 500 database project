@@ -58,9 +58,9 @@ VALUES
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
-    #SQL was used to query the Fortune 500 database in order to extract information about industries, revenue, companies and paid time off data.
+#SQL was used to query the Fortune 500 database in order to extract information about industries, revenue, companies and paid time off data.
 
-    --Show which companies, not in the Healthcare or Retail industries, have healthcare benefits and show their total paid time off days obligations to their employees (do not include maternity weeks), displayed as weeks.
+--Show which companies, not in the Healthcare or Retail industries, have healthcare benefits and show their total paid time off days obligations to their employees (do not include maternity weeks), displayed as weeks.
 
 SELECT company_name, industry, (employees * paid_time_off_days) / 7 AS total_pto_weeks
 FROM fortune_companies
@@ -79,7 +79,7 @@ ORDER BY total_pto_weeks DESC;
 SELECT company_name, industry, 
 (employees * paid_time_off_days) / 7 AS total_pto_weeks_num,
 CASE WHEN ((employees * paid_time_off_days) / 7) > 1000000 THEN 'Above 1 million' 
-	   WHEN ((employees * paid_time_off_days) / 7) > 500000 THEN 'Above 500k'
+     WHEN ((employees * paid_time_off_days) / 7) > 500000 THEN 'Above 500k'
      WHEN ((employees * paid_time_off_days) / 7) > 100000 THEN 'Above 100k'
      WHEN ((employees * paid_time_off_days) / 7) > 50000 THEN 'Above 50k'
      WHEN ((employees * paid_time_off_days) / 7) > 5000 THEN 'Above 5k'
