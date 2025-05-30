@@ -1,3 +1,5 @@
+This project used the following data:
+
 **Schema (SQLite v3.39)**
 
       CREATE TABLE vips (
@@ -124,6 +126,8 @@
      ;
 
 ---
+
+#SQL was used to query the Fortune 500 database in order to extract information about the conference attendees.
 
 **Query #1**
 
