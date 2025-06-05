@@ -163,10 +163,9 @@
 | Beverly    | Chen      | Marriott       |
 
 ---
-**Query #2**
 
-    
-    
+
+**Query #2**
     
     --The head of the education event planning at the conference would like to know which, if any, members whose association type is 'education' will be attending any of the workshop events? List the first and last names of any such members, along with the names of the events they are going to be attending. Sort in ascending order of event name.
     
@@ -182,11 +181,10 @@
 | Keisha     | Haines    | Urban Resilience: Designing Climate-Smart Cities |
 
 ---
-**Query #3**
 
-    
-    
-    
+
+**Query #3**
+       
     --The head of the conference would like a list detailing which VIPs are providing feedback to which other VIPS, including those who are providing no feedback. Sort by ascending name of the feedback provider. Concatenate the first and last names of all persons into the respective columns names 'Feedback Provider' and 'Feedback Receiver'.
     
     SELECT vfp.first_name || ' ' || vfp.last_name AS 'Feedback Provider',
@@ -230,11 +228,10 @@
 | Aarav Singh       | Linh Nguyen       |
 
 ---
-**Query #4**
 
-    
-    
-    
+
+**Query #4**
+   
     --The Marriott hotel has had a rat infestation. List the people staying at the hotel sorted by their professional associations, so they can be contacted and offered alternative accomodation.
     
     SELECT v.first_name, v.last_name, v.association, h.hotel_name
@@ -243,23 +240,34 @@
     ON v.member_id = r.member_id
     INNER JOIN hotels h
     ON r.hotel = h.hotel_id
-    WHERE r.hotel = (SELECT hotel_id FROM hotels WHERE h.hotel_name = 'Marriott')
+    WHERE h.hotel_name = 'Marriott'
     ORDER BY v.association;
 
-There are no results to be displayed.
+| first_name | last_name | association                                            | hotel_name |
+| ---------- | --------- | ------------------------------------------------------ | ---------- |
+| Aisling    | Murphy    | Climate Impacts on Farming Institute                   | Marriott   |
+| Leah       | Bennett   | Denver Climate Research Foundation                     | Marriott   |
+| Thiago     | Silva     | Everglades Research Institute                          | Marriott   |
+| Timothy    | Brown     | Michigan State University                              | Marriott   |
+| Denny      | Johnson   | Texas Department of Conservation and Natural Resources | Marriott   |
+| Aarav      | Singh     | US Department of Fish and Wildlife                     | Marriott   |
+| K. L.      | Denton    | US Department of Housing and Urban Development         | Marriott   |
+| Beverly    | Chen      | US Department of Natural Resources                     | Marriott   |
+| Sofia      | Rodriguez | US Department of Renewable Energy                      | Marriott   |
+| Min-Jun    | Lee       | US Department of Renewable Energy                      | Marriott   |
+| Linh       | Nguyen    | University of Pennsylvania                             | Marriott   |
 
 ---
+
+
 **Query #5**
 
-    
-    
-    
     --The conference organizers are planning a private dinner event. They want to invite VIPs who have been members for longer than the average membership duration across all VIPs. Your task is to generate a list of these long-standing members, including their first and last names, association, and the year they became a member.
     
-    SELECT v.first_name, v.last_name, v.association, v.member_since
-    FROM vips v
-    WHERE v.member_since < (SELECT ROUND(AVG(member_since), 0) FROM vips)
-    ORDER BY v.member_since;
+   SELECT first_name, last_name, association, member_since
+   FROM vips
+   WHERE (2025 - member_since) > (SELECT AVG(2025 - member_since) FROM vips)
+   ORDER BY member_since;
 
 | first_name | last_name | association                                            | member_since |
 | ---------- | --------- | ------------------------------------------------------ | ------------ |
@@ -281,11 +289,10 @@ There are no results to be displayed.
 | Victor     | Gonzalez  | McGill University                                      | 2008         |
 
 ---
+
+
 **Query #6**
 
-    
-    
-    
     --The head of the conference wants to know which VIPs are staying at the Hyatt Downtown, and are attending any event that has 'Climate' in its name. Return VIP first and last names, hotel name and event name.
     
     SELECT v.first_name, v.last_name, h.hotel_name, e.event_name
