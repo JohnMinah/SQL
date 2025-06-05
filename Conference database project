@@ -294,7 +294,7 @@
 **Query #6**
 
     --The head of the conference wants to know which VIPs are staying at the Hyatt Downtown, and are attending any event that has 'Climate' in its name. Return VIP first and last names, hotel name and event name.
-    
+
     SELECT v.first_name, v.last_name, h.hotel_name, e.event_name
     FROM vips v
     INNER JOIN reservations r
@@ -304,8 +304,8 @@
     INNER JOIN events e
     ON v.event = e.event_id
     WHERE h.hotel_name = 'Hyatt Downtown'
-    AND e.event_id IN (SELECT event_id FROM events
-                       WHERE event_name LIKE '%Climate%');
+    AND e.event_name LIKE '%Climate%';
+    
 
 | first_name | last_name | hotel_name     | event_name                                                      |
 | ---------- | --------- | -------------- | --------------------------------------------------------------- |
