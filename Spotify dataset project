@@ -1,0 +1,141 @@
+-- This project analyzes Spotify track data to uncover music trends through SQL. I:
+-- 1. Sourced Data: Downloaded a dataset from Kaggle containing track metadata (artist, popularity) and audio features (tempo, danceability, key, etc.).
+-- 2. Structured Data: Created a SQL table (BIT_DB.Spotifydata) with columns matching the dataset.
+-- 3. Performed Analysis: Wrote queries to answer questions like:
+--    "What are the top 10 most popular tracks?"
+--    "Which artists produce both fast and slow tempo songs?"
+--    "How are tracks distributed across musical keys and modes?"
+
+-- I created the table:
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+-- Then I inserted the data .csv into the table.
+-- The SQL examples below demonstrate how I transformed raw data into insights.
+
+--List the top 10 tracks by popularity.
+
+SELECT track_name, artist_name, popularity
+FROM Spotifydata
+ORDER BY popularity DESC
+LIMIT 10;
+
+
+--Find all tracks with popularity greater than 90, displaying artist name, track name and popularity.
+
+SELECT artist_name, track_name, popularity
+FROM BIT_DB.Spotifydata
+WHERE popularity > 90
+ORDER BY popularity DESC;
+
+
+--Calculate the average duration (in milliseconds) of tracks per artist, showing only artists with an average duration > 3 minutes (180,000 ms).
+
+SELECT artist_name, ROUND(AVG(duration_ms), 0) AS avg_track_duration
+FROM BIT_DB.Spotifydata
+WHERE duration_ms > 180000
+GROUP BY artist_name;
+
+
+--Determine the average popularity, danceability and energy, by artist and track.
+
+SELECT artist_name, track_name, AVG(popularity) AS avg_popularity, AVG(danceability) AS avg_danceability, AVG(energy) AS avg_energy
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name, track_name;
+
+
+--What is the average popularity of the three top most popular artists? If an artist has multiple tracks then use the average of those tracks' popularity to determine their popularity.
+
+SELECT artist_name, ROUND(AVG(popularity), 2) AS avg_popularity, COUNT(*) AS track_count
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY avg_popularity DESC
+LIMIT 3;
+
+
+--Find artists who have both very fast (tempo > 150) and very slow (tempo < 90) tracks.
+
+SELECT DISTINCT fast.artist_name
+FROM BIT_DB.Spotifydata fast
+JOIN BIT_DB.Spotifydata slow ON fast.artist_name = slow.artist_name
+WHERE fast.tempo > 150
+AND slow.tempo < 90
+ORDER BY fast.artist_name;
+
+
+--Count how many tracks are in each musical key (0-11) and mode (0=minor, 1=major), ordered by key then mode.
+
+SELECT song_key AS musical_key,
+CASE
+    WHEN song_mode = 1 THEN 'Major'
+    WHEN song_mode = 0 THEN 'Minor'
+    ELSE 'Unknown'
+END AS mode_name,
+COUNT(*) AS track_count
+FROM BIT_DB.Spotifydata
+GROUP BY song_key, song_mode
+ORDER BY song_key ASC, song_mode ASC;
+
+
+--Create a readable summary for each track that includes:
+--A combined title string in the format: "Artist: TrackName (PopularityScore)"; 
+--Rounded audio metrics (danceability, energy, valence) to 2 decimal places
+--Tempo classification: "Slow" (< 100 BPM), "Medium" (100-130 BPM), "Fast" (> 130 BPM)
+
+SELECT 
+    artist_name || ': ' || track_name || ' (' || popularity || ')' AS summary_string,
+    ROUND(danceability, 2) AS danceability,
+    ROUND(energy, 2) AS energy,
+    ROUND(valence, 2) AS valence,
+    CASE
+        WHEN tempo < 100 THEN 'Slow'
+        WHEN tempo BETWEEN 100 AND 130 THEN 'Medium'
+        ELSE 'Fast'
+        END AS tempo_class
+FROM BIT_DB.Spotifydata
+WHERE popularity >= 70
+ORDER BY artist_name ASC, popularity DESC;
+
+
+--Find pairs of distinct tracks by the same artist where:
+--Both tracks have a tempo difference of ≤ 5 BPM (nearly identical speed)
+--But one is in major key (mode = 1) and the other in minor key (mode = 0)
+--Include only tracks with popularity ≥ 70
+
+SELECT a.artist_name, 
+       a.track_name,
+       a.tempo,
+       a.mode,
+       b.track_name,
+       b.tempo,
+       b.mode,
+       ABS(a.tempo - b.tempo) AS tempo_diff
+FROM BIT_DB.Spotifydata a
+JOIN BIT_DB.Spotifydata b
+ON a.artist_name = b.artist_name
+AND a.track_id != b.track_id 
+WHERE a.mode = 1
+AND b.mode = 0
+AND ABS(a.tempo - b.tempo) <= 5
+AND a.popularity >= 70
+AND b.popularity >= 70
+ORDER BY a.artist_name, tempo_diff;
+
