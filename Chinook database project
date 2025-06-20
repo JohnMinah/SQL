@@ -1,0 +1,23 @@
+# Chinook Database SQL Analysis  
+
+## Project Overview  
+This project explores the **Chinook database** (a digital media store) using SQL to analyze customers, sales, and music trends. Key tasks include filtering geographic data, joining tables, aggregating metrics, and identifying top customers.  
+
+## Database Schema  
+![Chinook Schema](https://www.sqlitetutorial.net/wp-content/uploads/2015/11/sqlite-sample-database-color.jpg)  
+
+
+## Key Analyses  
+1. **Geographic Segmentation**: Non-US customers and Brazilian sales trends.  
+2. **Sales Agent Performance**: Invoices linked to support reps.  
+3. **Time-Based Metrics**: 2009 revenue and invoice counts.  
+4. **Music Catalog Insights**: Tracks, genres, and artist relationships.  
+
+## SQL Highlights  
+- Complex joins (customers, invoices, employees)  
+- Aggregations (`SUM`, `COUNT`, `MIN`)  
+- Window functions (genre-based comparisons)  
+- Date filtering (`strftime` for year-based queries)  
+
+
+
