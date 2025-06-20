@@ -4,7 +4,7 @@
 This project explores the **Chinook database** (a digital media store) using SQL to analyze customers, sales, and music trends. Key tasks include filtering geographic data, joining tables, aggregating metrics, and identifying top customers.  
 
 ## Database Schema  
-![Chinook Schema](https://www.sqlitetutorial.net/wp-content/uploads/2015/11/sqlite-sample-database-color.jpg)  
+![Chinook Schema](https://www.sqlitetutorial.net/wp-content/uploads/2018/03/sqlite-sample-database-color.jpg)  
 
 
 ## Key Analyses  
